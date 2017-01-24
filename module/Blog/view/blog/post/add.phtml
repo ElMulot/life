@@ -1,0 +1,160 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headScript()->prependFile('/bootstrap_select/js/i18n/defaults-fr_FR.min.js');
+$this->headScript()->prependFile('/tinymce/tinymce.min.js');
+
+$this->headTitle('Nouveau post');
+
+$form->get('language')->setAttributes([
+		'class' => 'form-control selectpicker'
+]);
+
+$form->get('submit')->setAttributes([
+		'class' => 'btn btn-primary'
+]);
+
+$form->get('cancel')->setAttributes([
+		'class' => 'btn btn-primary'
+]);
+
+if ($step == 1):
+	$form->prepare();
+	
+	?>
+	<div class="row">
+	    <div class="col-md-6">
+	        <?= $this->form()->openTag($form); ?>
+	        
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('language')); ?>
+	            <?= $this->formElement($form->get('language')); ?>
+	            <?= $this->formElementErrors($form->get('language')); ?>                  
+	        </div>
+	        <a href='<?= $this->url('posts') ?>'><?= $this->formElement($form->get('cancel')); ?></a>
+	        <?= $this->formElement($form->get('submit')); ?>
+	        <?= $this->form()->closeTag(); ?>
+	        
+	    </div> 
+	</div>
+<?php else: ?>
+	<script type="text/javascript">
+		tinymce.init({
+			selector:'textarea',
+			menubar:false,
+			toolbar:'undo redo | cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontsizeselect | bullist numlist | outdent indent | removeformat',
+			plugins : 'advlist autolink link image lists charmap print preview'
+		});
+	</script>
+<?php 
+	$form->get('language')->setAttributes([
+			'class'=>'form-control selectpicker',
+			'disabled' => 'disabled ',
+	]);
+	
+	$form->get('title')->setAttributes([
+			'class'=>'form-control',
+			'placeholder'=>'Titre du post'
+	]);
+		
+	$form->get('cancel_image')->setAttributes([
+			'class' => 'btn btn-primary'
+	]);
+	
+	$form->get('content')->setAttributes([
+			'class'=>'form-control',
+			'placeholder'=>'Contenu',
+			'rows'=>6
+	]);
+	$form->get('foods')->setAttributes([
+			'class'=>'form-control selectpicker'
+	]);
+	
+	$form->get('tags')->setAttributes([
+			'class'=>'form-control',
+			'placeholder'=>'Tags'
+	]);
+	
+	$form->get('status')->setAttributes([
+			'class'=>'form-control selectpicker'
+	]);
+	
+	$form->get('submit')->setAttributes([
+			'class'=>'btn btn-primary']
+			);
+	
+	$form->get('cancel')->setAttributes([
+			'class' => 'btn btn-primary'
+	]);
+	$form->prepare();
+	?>
+	<div class="row">
+	    <div class="col-md-6">
+	        <?= $this->form()->openTag($form); ?>
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('language')); ?>
+	            <?= $this->formElement($form->get('language')); ?>
+	            <?= $this->formElementErrors($form->get('language')); ?>                  
+	        </div>
+	        
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('title')); ?>
+	            <?= $this->formElement($form->get('title')); ?>
+	            <?= $this->formElementErrors($form->get('title')); ?>                  
+	        </div>
+	        
+	        <div class="form-group" style="border-radius:4px; border:1px solid #ccc; padding: 6px 12px;">
+	        	<label for="title">Image</label>
+		        <div class="row">
+		        <div class="col-md-5">
+			        <img id="no_image" src="<?= $this->url('posts', ['action'=>'file'], ['query'=>['name'=>'', 'thumbnail'=>true]]); ?>" class="img-thumbnail">
+			        <img id="thumbnail" src="" class="img-thumbnail" style="display:none;">
+			    </div>
+			    <div class="col-md-7">
+		            <?= $this->formLabel($form->get('image')); ?>
+		            <?= $this->formElement($form->get('image')); ?>
+		            <?= $this->formElementErrors($form->get('image')); ?>
+		            <br />
+		           	<?= $this->formElement($form->get('cancel_image')); ?>
+		        </div>
+		        </div>
+	        </div>
+	        
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('content')); ?>
+	            <?= $this->formElement($form->get('content')); ?>
+	            <?= $this->formElementErrors($form->get('content')); ?>                  
+	        </div>
+
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('foods')); ?>
+	            <?= $this->formElement($form->get('foods')); ?>
+	            <?= $this->formElementErrors($form->get('foods')); ?>                  
+	        </div>
+	    
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('tags')); ?>
+	            <?= $this->formElement($form->get('tags')); ?>
+	            <?= $this->formElementErrors($form->get('tags')); ?>                  
+	            <p class="help-block">Séparer les tags par des virgules</p>
+	        </div>
+	        
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('status')); ?>
+	            <?= $this->formElement($form->get('status')); ?>
+	            <?= $this->formElementErrors($form->get('status')); ?>                  
+	        </div>
+	        <a href='<?= $this->url('posts') ?>'><?= $this->formElement($form->get('cancel')); ?></a>
+	        <?= $this->formElement($form->get('submit')); ?>
+	        <?= $this->form()->closeTag(); ?>
+	    </div>
+	</div>
+<?php endif; ?>

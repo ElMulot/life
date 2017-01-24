@@ -1,0 +1,60 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headTitle($this->translate('HOME'));
+
+$form->get('email')->setAttributes([
+		'class' => 'form-control',
+		'placeholder' => $this->translate('USER_NEW_ACCOUNT_MAIL_PLACEHOLDER'),
+		'required' => true,
+		'autofocus' => true
+])->setLabelAttributes([
+		'class' => 'sr-only'
+]);
+
+$form->get('password')->setAttributes([
+		'class' => 'form-control',
+		'placeholder' => '',
+		'required' => true
+])->setLabelAttributes([
+		'class' => 'sr-only'
+]);
+
+?>
+<div class="row">
+	<div class="col-md-offset-9 col-md-3">
+		<form class="form-signin" method="post">
+            <?php if ($isLoginError): ?>
+            <div class="alert alert-warning" role="alert">
+                <?= $this->translate('USER_ACCESS_DENIED')?>
+                <a href="<?= $this->url('reset-password') ?>"><?= $this->translate('USER_FORGOT_PASSWORD') ?></a>
+			</div>
+            <?php endif; ?>
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formLabel($form->get('password')); ?>
+            <?= $this->formElement($form->get('password')); ?>
+            <div class="checkbox">
+				<label>
+                    <?= $this->formElement($form->get('remember_me')); ?> <?= $this->translate('USER_REMEMBER_ME')?>
+                </label>
+			</div>
+            <?= $this->formElement($form->get('redirect_url')); ?>
+            <?= $this->formElement($form->get('csrf'))?>
+            <button class="btn btn-lg btn-primary btn-block"
+				type="submit"><?= $this->translate('USER_SIGN_IN') ?></button>
+		</form>
+		<p></p>
+		<a class="btn btn-lg btn-primary btn-block" href="<?= $this->url('account', ['action'=>'add']); ?>">
+			<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <?= $this->translate('USER_NEW_ACCOUNT') ?>
+		</a>
+	</div>
+</div>

@@ -1,0 +1,145 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headScript()->prependFile('/js/chart.bundle.min.js');
+$this->headTitle('SUMMARY');
+?>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+				
+		var summaryChart = new Chart($("#summary_chart"), {
+	    type: 'bar',
+	    data: {
+	        labels: [
+			<?php
+			foreach (array_keys($weightsByDay) as $date)
+			{
+				echo "'" . $date. "', ";
+			}
+			?>],
+	        datasets: [{
+	            data: [
+    			<?php
+				foreach ($weightsByDay as $weight)
+				{
+					echo "'" . $weight. "', ";
+				}
+    			?>],
+    			backgroundColor:'rgba(102, 204, 0, 0.4)',
+    			borderColor:'rgba(51, 102, 0, 1)',
+    			hoverBackgroundColor:'rgba(51, 102, 0, 1)',
+    			borderWidth: 1,
+	            scales: {
+	                xAxes: [{
+	                    type: 'time',
+	                    time: {
+	                        displayFormats: {
+	                        	day: 'll'
+	                        }
+	                    }
+	                }],
+	                yAxes: [{
+	                    scaleLabel: {
+	                      display: true,
+	                      labelString: '<?= $this->translate('SUMMARY_GRAPH_SUMMARY_Y_AXE'); ?>'
+						}
+					}],
+	            },
+	            borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        scales: {
+	            yAxes: [{
+	                ticks: {
+	                    beginAtZero:true
+	                }
+	            }]
+	        },
+	        legend: {
+		        display:false
+	        },
+	        title: {
+	            display: true,
+	            text: '<?= $this->translate('SUMMARY_GRAPH_SUMMARY_TITLE'); ?>'
+	        }
+	    }
+	})
+
+	var overviewChart = new Chart($("#overview_chart"), {
+	    type: 'pie',
+	    data: {
+	        labels: [
+			<?php
+			foreach (array_keys($weightsByFoodFiltered) as $name)
+			{
+				echo "'" . (($name == 'Others')?$this->translate('SUMMARY_GRAPH_OVERVIEW_OTHERS'):$name) . "', ";
+			}
+			?>],
+	        datasets: [{
+	            data: [
+    			<?php
+				foreach ($weightsByFoodFiltered as $weight)
+				{
+					echo "'" . $weight. "', ";
+				}
+    			?>],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                hoverBackgroundColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+    			borderWidth: 1
+	        }]
+	    },
+	    options: {
+	        legend: {
+		        display:true
+	        },
+	        title: {
+	            display: true,
+	            text: '<?= $this->translate('SUMMARY_GRAPH_OVERVIEW_TITLE'); ?>'
+	        }
+	    }
+	});
+	});
+</script>
+
+
+
+<div class="row">
+	<div class="col-md-8">
+		<canvas id="summary_chart"></canvas>
+	</div>
+	<div class="col-md-4">
+		<canvas id="overview_chart"></canvas>
+	</div>
+</div>

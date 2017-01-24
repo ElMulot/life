@@ -1,0 +1,80 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headScript()->prependFile('/js/bootbox.min.js');
+$this->headTitle('Gestion des posts');
+?>
+<script type="text/javascript">
+	function confirm(link) {
+		bootbox.confirm({
+			title: "Confirmer la suppression ?",
+			message: "La suppression du post n'entrainera pas la suppression de l'aliment auquel il est éventuellement relié.",
+			buttons: {
+				cancel: {
+					label: '<i class="fa fa-times"></i> Annuler'
+				},
+				confirm: {
+					label: '<i class="fa fa-check"></i> Confirmer'
+				}
+			},
+			callback: function (result) {
+				if (result)
+					document.location.href=link;
+			}
+		});
+	}
+</script>
+
+<p>
+	<a class="btn btn-primary" href="<?= $this->url('posts', ['action' => 'add']) ?>">
+		<span class="glyphicon glyphicon-plus" ></span> Nouveau post
+	</a>
+</p>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>Auteur</th>
+        <th>Langue</th>
+        <th>Titre</th>
+        <th>Date de création</th>
+        <th>Status</th>        
+        <th width="220">&nbsp;</th>        
+    </tr>
+    
+    <?php foreach ($posts as $post): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($post->getId()); ?></td>
+        <td><?= $this->escapeHtml($post->getUser()->getFullName()); ?></td>
+        <td><?= $this->escapeHtml($post->getLanguage()); ?></td>
+        <td>
+            <a href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId()]); ?>">
+                <?= $this->escapeHtml($post->getTitle()); ?>
+            </a> 
+        </td>
+        <td><?= $this->escapeHtml($post->getDateCreated()); ?></td>        
+        <td><?= $this->escapeHtml($postManager->getPostStatusAsString($post)); ?></td>
+        <td>
+            <a class="btn btn-primary" href="<?= $this->url('posts', 
+                    ['action'=>'edit', 'id'=>$post->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> <?= $this->translate('EDIT') ?>
+            </a>
+            <a class="btn btn-danger" href="javascript:confirm('<?= $this->url('posts', ['action'=>'delete', 'id'=>$post->getId()]); ?>');">
+                <span class="glyphicon glyphicon-remove"></span> <?= $this->translate('DELETE') ?>
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>

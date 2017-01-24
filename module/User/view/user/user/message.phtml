@@ -1,0 +1,49 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+if ($id == 'sent' || $id == 'set')
+	$this->headTitle('USER_THANK_YOU');
+else
+	$this->headTitle('USER_ERROR');
+?>
+
+<div class="row">
+<div class="col-md-offset-4 col-md-5">
+
+<?php if ($id=='sent'): ?>
+<p><?= $this->translate('USER_RESET_PASSWORD_MESSAGE') ?>
+</p>
+<a class="btn btn-lg btn-primary btn-block" href="<?= $this->url('account', ['action'=>'add']); ?>">
+	<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <?= $this->translate('HOME') ?>
+</a>
+<?php elseif ($id=='invalid-email'): ?>
+<p>
+    <?= $this->translate ('USER_RESET_PASSWORD_INVALID_PASSWORD') ?>
+</p>
+<a class="btn btn-lg btn-primary btn-block" href="<?= $this->url('account', ['action'=>'add']); ?>">
+	<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> <?= $this->translate('USER_NEW_ACCOUNT') ?>
+</a>
+<?php elseif ($id=='set'): ?>
+<p>
+    <?= $this->translate ('USER_CHANGE_PASSWORD_SUCCESS') ?>
+</p>
+<p>
+    <?= $this->translate ('USER_RETURN_TO') ?> <a href="<?= $this->url('login'); ?>"><?= $this->translate ('USER_LOGIN_PAGE') ?></a>.
+</p>
+<?php elseif ($id=='failed'): ?>
+<p>
+    <?= $this->translate('USER_RESET_PASSWORD_MESSAGE_ERROR_1') ?> 
+    <a href="<?= $this->url('reset-password') ?>"><?= $this->translate('USER_RESET_PASSWORD_MESSAGE_ERROR_2') ?></a>
+    <?= $this->translate('USER_RESET_PASSWORD_MESSAGE_ERROR_3') ?>
+</p>
+<?php endif; ?>
+</div>
+</div>    

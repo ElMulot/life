@@ -1,0 +1,126 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+use Blog\Entity\Post;
+
+$this->headScript()->prependFile('/js/bootbox.min.js');
+$this->headTitle('WASTE_LIST');
+echo $this->flashMessenger()->renderHtml();
+?>
+<script type="text/javascript">
+	var isOverTooltip = false;
+	
+	$(document).ready(function(){
+		$('tr').tooltip({trigger:'manual', html:true, placement:"right", container:"#tooltip"});
+		$('[data-toggle="tooltip"]').tooltip();
+	});
+	
+	$(function(){
+		var tooltipHover = false;
+		$('.table tr td').each(function() {
+			$(this.parentElement).css('cursor','pointer').hover(
+				function(){
+					var el = this;
+					window.setTimeout(function() {
+						$(el).addClass('active');
+						$(el).tooltip('show');
+					}, 100);
+				},
+				function(){
+					var el = this;
+					window.setTimeout(function() {
+						if (!tooltipHover) {
+							$(el).removeClass('active');
+							$(el).tooltip('hide');
+						}
+					}, 100);
+				});
+		});
+		$('#tooltip').hover(
+			function () {
+				tooltipHover = true;
+			}, function(){
+			$('.table tr').each(function() {
+				$(this).removeClass('active');
+				$(this).tooltip('hide');
+				tooltipHover = false;
+			});
+		});
+	});
+
+	function confirm(link) {
+		bootbox.confirm({
+			title: "<?= $this->translate('WASTE_CONFIRM_DELETE_TITLE') ?>",
+			message: "<?= $this->translate('WASTE_CONFIRM_DELETE_CONTENT') ?>",
+			buttons: {
+				cancel: {
+					label: '<i class="fa fa-times"></i> <?= $this->translate('CANCEL') ?>'
+				},
+				confirm: {
+					label: '<i class="fa fa-check"></i> <?= $this->translate('CONFIRM') ?>'
+				}
+			},
+			callback: function (result) {
+				if (result)
+					document.location.href=link;
+			}
+		});
+	}
+</script>
+<p>
+	<a class="btn btn-primary" href="<?= $this->url('waste', ['action' => 'add']) ?>">
+		<span class="glyphicon glyphicon-plus" ></span> <?= $this->translate('ADD') ?>
+	</a>
+</p>
+
+<div class="row">
+	<div class="col-md-8">
+		<table class="table">
+		<tr>
+		    <th><?= $this->translate('WASTE_DATE') ?></th>
+		    <th><?= $this->translate('WASTE_FOOD') ?></th>
+		    <th><?= $this->translate('WASTE_QUANTITY') ?></th>
+		    <th><?= $this->translate('WASTE_WHY') ?></th>
+		    <th style="width:220px">&nbsp;</th>
+		</tr>
+		<?php foreach ($wastes as $waste) : ?>
+		
+		    <tr title="<?= $this->escapeHtml(addslashes($waste->getFood()->getComment())) ?>
+		    <?php
+		    $posts = $entityManager->getRepository(Post::class)->findPostsByTag($waste->getFood()->getFoodName(), $this->Identity()->getLanguage());
+		    if (count($posts) > 0): ?>
+			    <?= '<h4>'.$this->translate('WASTE_BLOG_LINK').'</h4>' ?>
+			    <?php 
+			    foreach ($posts as $post) {
+			    	echo "<a href='" . $this->url('posts', ['action'=>'view', 'id'=>$post->getId()]) . "'>";
+			    	echo $post->getTitle().'</a><br>';
+			    } ?>
+			<?php endif; ?>
+			    ">
+		 		<td><?= $this->escapeHtml($waste->getDateCreated()) ?></td>
+		 		<td><?= $this->escapeHtml($waste->getFood()->getFoodName()) ?></td>
+		        <td><?= $this->escapeHtml($waste->getQuantity()) ?> <?= ($waste->getUOM() != 'UNIT')?$this->escapeHtml($this->translate($waste->getUOM())):'' ?></td>
+		        <td><?= $this->escapeHtml($waste->getWhy()) ?></td>
+		        <td>
+		            <a class="btn btn-primary" href="<?= $this->url('waste', ['action'=>'edit', 'id'=>$waste->getId()]); ?>">
+		                <span class="glyphicon glyphicon-pencil" ></span> <?= $this->translate('EDIT') ?>
+		            </a>
+		            <a class="btn btn-danger" href="javascript:confirm('<?= $this->url('waste', ['action'=>'delete', 'id'=>$waste->getId()]); ?>');">
+		                <span class="glyphicon glyphicon-remove" ></span> <?= $this->translate('DELETE') ?>
+		            </a>
+		        </td>
+		    </tr>
+		<?php endforeach; ?>
+		</table>
+	</div>
+	<div class="col-md-4" id="tooltip">
+	</div>
+</div>

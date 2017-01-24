@@ -1,0 +1,74 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headTitle('EDIT');
+
+$form->get('food')->setAttributes([
+		'class'=>'form-control selectpicker',
+]);
+$form->get('quantity')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>$this->translate('WASTE_QUANTITY'),
+]);
+
+$form->get('UOM')->setAttributes([
+		'class'=>'form-control selectpicker',
+]);
+
+$form->get('why')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>$this->translate('WASTE_WHY'),
+]);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('food')); ?>
+            <?= $this->formElement($form->get('food')); ?>
+            <?= $this->formElementErrors($form->get('food')); ?>                  
+        </div>
+        
+        <div class="form-group">
+        	<?= $this->formLabel($form->get('quantity')); ?>
+        	<div class="row">
+		        <div class="col-md-6">
+		        	<?= $this->formElement($form->get('quantity')); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $this->formElement($form->get('UOM')); ?>
+				</div>
+        	</div>
+        	<div class="row">
+		        <div class="col-md-6">
+		        	<?= $this->formElementErrors($form->get('quantity')); ?>
+				</div>
+				<div class="col-md-6">
+					<?= $this->formElementErrors($form->get('UOM')); ?>
+				</div>
+        	</div>
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('why')); ?>
+            <?= $this->formElement($form->get('why')); ?>
+            <?= $this->formElementErrors($form->get('why')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div> 

@@ -1,0 +1,21 @@
+<?php
+return [
+		'Zend\Mvc\Plugin\Prg',
+		'Zend\Mvc\Plugin\Identity',
+		'Zend\Mvc\Plugin\FlashMessenger',
+		'Zend\Mvc\Plugin\FilePrg',
+		'Zend\Session',
+		'Zend\Cache',
+		'Zend\Paginator',
+		'Zend\Form',
+		'Zend\Router',
+		'Zend\Validator',
+		'Zend\Navigation',
+		'Zend\Mvc\I18n',
+		'DoctrineModule',
+		'DoctrineORMModule',
+		'Main',
+		'User',
+		'Blog',
+		'Admin'
+];

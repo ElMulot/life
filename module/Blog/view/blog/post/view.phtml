@@ -1,0 +1,154 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+use User\Entity\User;
+
+if (!isset($commentId)) $commentId = 0;
+
+$this->headTitle($post->getTitle());
+
+$form = $this->form;
+
+if ($this->Identity() == null) {
+	$form->get('author')->setAttributes([
+	    'class'=>'form-control', 
+	    'placeholder'=>'BLOG_NAME'
+	    ]);
+}
+
+$form->get('comment')->setAttributes([
+    'class'=>'form-control',
+    'rows'=>6, 
+    'placeholder'=>'BLOG_COMMENT'
+    ]);
+
+$form->get('submit')->setAttributes([
+	'class'=>'btn btn-primary',
+]);
+
+$form->get('cancel')->setAttributes([
+		'class' => 'btn btn-primary'
+]);
+$form->prepare();
+
+echo $this->flashMessenger()->renderHtml();
+?>
+
+<a class="btn btn-primary" href="<?= $this->url('blog', ['action'=>'index']); ?>">
+	<span class="glyphicon glyphicon-chevron-left"></span>&nbsp;&nbsp;&nbsp;<?= $this->translate('BLOG_BACK') ?>
+</a>
+
+<h1>
+    <?= $this->escapeHtml($post->getTitle()); ?>    
+</h1>
+
+<p class="comments-header">
+    <?= $this->escapeHtml($postManager->getCommentCountStr($post)); ?>
+</p>
+
+<p>
+    <?= $this->translate('BLOG_PUBLISHED_ON') ?> <?= $this->escapeHtml(date('j-m-Y', strtotime($post->getDateCreated()))); ?> 
+	<?php
+	if ($this->escapeHtml($postManager->convertTagsToString($post)) != '')
+	{
+		echo '| ' . $this->translate('BLOG_TAGS') . ': ' . $this->escapeHtml($postManager->convertTagsToString($post));
+	}
+	?>
+</p>
+<p>    
+    <?= $post->getContent(); ?>
+</p>
+
+<h3><?= $this->escapeHtml($postManager->getCommentCountStr($post)); ?></h3>
+
+
+
+<?php foreach ($post->getComments() as $comment): ?>
+
+<div class="row">
+	<div class="col-sm-10">
+		<hr>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-sm-8">
+		<p>
+			<?= $this->escapeHtml($comment->getAuthor()) ?> <?= $this->translate('BLOG_ON') ?> 
+			<?= $this->escapeHtml($comment->getDateCreated()); ?>
+		</p>
+    	<?php if ($commentId == $comment->getId()): ?>
+			<?= $this->form()->openTag($form); ?>
+	        <div class="form-group">
+	            <?= $this->formElement($form->get('comment')); ?>
+	            <?= $this->formElementErrors($form->get('comment')); ?>                  
+	        </div>
+	        <?= $this->formElement($form->get('submit')); ?>
+	        <a href='<?= $this->url('posts', ['action' => 'view', 'id' => $post->getId()]) ?>'><?= $this->formElement($form->get('cancel')); ?></a>
+	        <?= $this->form()->closeTag(); ?>
+    	<?php else: ?>
+    		<?= $this->escapeHtml($comment->getContent()); ?>
+    	<?php endif; ?>
+    </div>
+	<div class="col-sm-4">
+		<?php if ($this->Identity() && $commentId != $comment->getId()) :
+			if ($this->Identity()->getStatus() == User::STATUS_ADMIN) : ?>
+				<a class="btn btn-xs btn-primary" href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId(), 'comment_action' => 'edit_comment', 'comment_id'=>$comment->getId()]); ?>">
+					<span class="glyphicon glyphicon-pencil"></span> <?= $this->translate('EDIT'); ?>
+				</a>
+				<a class="btn btn-xs btn-danger" href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId(), 'comment_action' => 'delete_comment', 'comment_id'=>$comment->getId()]); ?>">
+					<span class="glyphicon glyphicon-remove"></span> <?= $this->translate('DELETE'); ?>
+				</a>
+			<?php elseif ($comment->getUser()) :
+				if ($this->Identity()->getId = $comment->getUser()->getId()) : ?>
+					<a class="btn btn-xs btn-primary" href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId(), 'comment_action' => 'edit_comment', 'comment_id'=>$comment->getId()]); ?>">
+						<span class="glyphicon glyphicon-pencil"></span> <?= $this->translate('EDIT'); ?>
+					</a>
+					<a class="btn btn-xs btn-danger" href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId(), 'comment_action' => 'delete_comment', 'comment_id'=>$comment->getId()]); ?>">
+						<span class="glyphicon glyphicon-remove"></span> <?= $this->translate('DELETE'); ?>
+					</a>
+				<?php endif; ?>
+			<?php endif; ?>
+		<?php endif; ?>
+	</div>
+</div>
+<?php endforeach; ?>
+
+<?php if ($commentId == 0): ?>
+	<hr>
+	
+	<h3 id="comment"><?= $this->translate('BLOG_ADD_NEW_COMMENT') ?></h3>
+	<a>&nbsp;</a>
+	<div class="row">
+	    <div class="col-md-8">
+	        <?= $this->form()->openTag($form); ?>
+	        
+	        <?php if ($this->Identity() == null) :?>
+		        <div class="form-group">
+		            <?= $this->formLabel($form->get('author')); ?>
+		            <?= $this->formElement($form->get('author')); ?>
+		            <?= $this->formElementErrors($form->get('author')); ?>                  
+		        </div>
+	        <?php endif; ?>
+	        
+	        <div class="form-group">
+	            <?= $this->formLabel($form->get('comment')); ?>
+	            <?= $this->formElement($form->get('comment')); ?>
+	            <?= $this->formElementErrors($form->get('comment')); ?>                  
+	        </div>
+	        
+	        <?= $this->formElement($form->get('submit')); ?>
+	        
+	        <?= $this->form()->closeTag(); ?>
+	    </div>    
+	</div>
+<?php endif; ?>
+

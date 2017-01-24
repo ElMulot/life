@@ -1,0 +1,69 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headTitle('MY_ACCOUNT');
+echo $this->flashMessenger()->renderHtml();
+
+$form->get('email')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>'USER_NEW_ACCOUNT_MAIL_PLACEHOLDER'
+]);
+
+$form->get('full_name')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>'USER_NEW_ACCOUNT_FULL_NAME_PLACEHOLDER'
+]);
+
+$form->get('language')->setAttributes([
+		'class'=>'form-control selectpicker'
+]);
+
+$form->get('submit')
+->setAttributes(['class'=>'btn btn-primary'])
+->setValue('SAVE');
+
+$form->prepare();
+?>
+
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('email')); ?>
+            <?= $this->formElement($form->get('email')); ?>
+            <?= $this->formElementErrors($form->get('email')); ?>                  
+        </div>
+        
+        <div class="form-group">
+        	<label for="password"><?= $this->translate('USER_PASSWORD') ?></label><br>
+        	<a class="btn btn-primary" href="<?= $this->url('account', ['action'=>'changePassword']); ?>">
+        		<?= $this->translate('USER_CHANGE_PASSWORD') ?>
+        	</a>
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('full_name')); ?>
+            <?= $this->formElement($form->get('full_name')); ?>
+            <?= $this->formElementErrors($form->get('full_name')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('language')); ?>
+            <?= $this->formElement($form->get('language')); ?>
+            <?= $this->formElementErrors($form->get('language')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div>   

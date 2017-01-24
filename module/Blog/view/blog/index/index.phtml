@@ -1,0 +1,98 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headTitle('BLOG');
+
+$localeForm->get('language')->setAttributes([
+		'class' => 'form-control selectpicker',
+		'onchange' => 'form.submit();',
+]);
+
+echo $this->flashMessenger()->renderHtml();
+?>
+
+<div class="row">
+    
+    <div class="col-md-8">
+
+	    <?php foreach($posts as $post): ?>
+	
+	    <h3>
+	        <a href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId()]); ?>">
+	            <?= $this->escapeHtml($post->getTitle()); ?>
+	        </a>    
+	    </h3>
+	    
+	    <p>
+	        <?= $this->translate('BLOG_PUBLISHED_ON') ?> <?= $this->escapeHtml(date('j-m-Y', strtotime($post->getDateCreated()))); ?> 
+	        <?= $this->translate('BLOG_PUBLISHED_BY') ?> <?= $this->escapeHtml($post->getUser()->getFullName()); ?>
+			<?php
+			if ($this->escapeHtml($postManager->convertTagsToString($post)) != '')
+			{
+				echo '| ' . $this->translate('BLOG_TAGS') . ': ' . $this->escapeHtml($postManager->convertTagsToString($post));
+			}
+			?>
+	    </p>    
+	        
+	    <p class="comments-header">
+	    	<a href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId()]); ?>">
+	        	<?= $this->escapeHtml($this->translate($postManager->getCommentCountStr($post))); ?>
+	        </a> | 
+	        <a href="<?= $this->url('posts', ['action'=>'view', 'id'=>$post->getId()], ['fragment'=>'comment']); ?>">
+	            <?= $this->translate('BLOG_ADD_NEW_COMMENT')?>
+	        </a>
+	    </p>
+	
+	    <div class="row">    
+	        <?php if ($post->getImage()): ?>
+		        <div class="col-xs-7">
+		        	<img src="<?= $this->url('posts', ['action'=>'file'], ['query'=>['name'=>$post->getImage()]]); ?>" class="img-rounded img-responsive">
+		        </div>
+		        <div class="col-xs-5">
+		        	<?= $post->getContent(); ?>
+		        </div>
+			<?php else: ?>
+				<div class="col-xs-12">
+					<?= $post->getContent(); ?>
+				</div>
+			<?php endif; ?>
+		</div>
+    
+    <?php endforeach; ?>
+	</div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><?= $this->translate('BLOG_TAGS_CLOUD') ?></h3>
+            </div>
+            <div class="panel-body">
+                <?php foreach($this->tagCloud as $tagName=>$frequency): ?>
+                
+                <a href="<?= $this->url('blog', ['action'=>'index'],
+                    ['query'=>['tag'=>$tagName]]); ?>">                   
+        
+                    <span style="font-size:<?= $this->escapeHtml(0.9+$frequency*3) ?>em">
+                        <?= $this->escapeHtml($tagName); ?>
+                    </span>
+                
+                </a>    
+                    
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </div>
+</div>
+<?php if (!$this->Identity()):?>
+<form method="post" style="position:absolute; right:10px; top:10px; z-index:2000;">
+	<?= $this->formElement($localeForm->get('language')); ?>
+</form>
+<?php endif; ?>
+

@@ -1,0 +1,116 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headScript()->prependFile('odometer/odometer.min.js');
+$this->headLink()->prependStylesheet('odometer/themes/odometer-theme-car.css');
+
+$this->headTitle($this->translate('HOME'));
+
+$loginForm->get('email')->setAttributes([
+		'class' => 'form-control',
+		'placeholder' => $this->translate('USER_NEW_ACCOUNT_MAIL_PLACEHOLDER'),
+		'autofocus' => true
+])->setLabelAttributes([
+		'class' => 'sr-only'
+]);
+
+$loginForm->get('password')->setAttributes([
+		'class' => 'form-control',
+		'placeholder' => '',
+])->setLabelAttributes([
+		'class' => 'sr-only'
+]);
+
+$loginForm->get('submit')->setAttributes([
+		'class' => 'btn btn-lg btn-primary btn-block'
+]);
+
+$localeForm->get('language')->setAttributes([
+		'class' => 'form-control selectpicker',
+		'onchange' => 'form.submit();',
+]);
+
+?>
+<style type="text/css">
+	.container {
+		padding:0px;
+	}
+</style>
+<script type="text/javascript">
+window.odometerOptions = {
+	auto: false
+};
+$(document).ready(function() {
+	var savedFood = <?= round($this->savedFood); ?>;
+	var savedFoodCounter = new Odometer({
+		el: $('.odometer')[0],
+		format: '( ddd)',
+		duration: <?= round($this->savedFoodDelay); ?>,
+		value: savedFood
+	});
+
+    setInterval(function(){
+    	savedFoodCounter.update(savedFood++);
+      }, <?= round($this->savedFoodDelay); ?>);
+	
+    savedFoodCounter.update(savedFood);
+});
+	
+</script>
+<div id="welcome">
+	<div class="row">
+		<div class="col-md-8">
+			<h2><?= $this->translate('INDEX_WELCOME_TITLE') ?></h2>
+			<p><?= $this->translate('INDEX_WELCOME_CONTENT') ?></p><br />
+			<div class="odometer"></div><label>&nbsp;&nbsp;<?= $this->translate('INDEX_WELCOME_WASTES_SAVED') ?></label>
+		</div>
+		<div class="col-md-offset-1 col-md-3">
+			<?= $this->form()->openTag($loginForm); ?>
+	            <?php if ($isLoginError): ?>
+	            <div class="alert alert-warning" role="alert">
+	                <?= $this->translate('USER_ACCESS_DENIED')?><br />
+	                <a href="<?= $this->url('reset-password') ?>"><?= $this->translate('USER_FORGOT_PASSWORD') ?></a>
+				</div>
+	            <?php endif; ?>
+	            <?= $this->formLabel($loginForm->get('email')); ?>
+	            <?= $this->formElement($loginForm->get('email')); ?><br/>
+	            <?= $this->formLabel($loginForm->get('password')); ?>
+	            <?= $this->formElement($loginForm->get('password')); ?>
+	            <div class="checkbox">
+					<label>
+	                    <?= $this->formElement($loginForm->get('remember_me')); ?> <?= $this->translate('USER_REMEMBER_ME')?>
+	                </label>
+				</div><br/>
+	            <?= $this->formElement($loginForm->get('redirect_url')); ?>
+	            <?= $this->formElement($loginForm->get('csrf'))?>
+		        <?= $this->formElement($loginForm->get('submit')); ?>
+		        <?= $this->form()->closeTag(); ?>
+			<p></p>
+			<a class="btn btn-lg btn-primary btn-block" href="<?= $this->url('account', ['action'=>'add']); ?>">
+				<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> <?= $this->translate('USER_NEW_ACCOUNT') ?>
+			</a>
+		</div>
+	</div>
+	<div class="row welcome">
+			<h3><?= $this->translate('INDEX_BLOG_LAST_POSTS') ?></h3>
+			<?php foreach ($posts as $post): ?>
+				<div class="col-md-2 blog">
+					<a href="<?= $this->url('posts', ['action' => 'view', 'id' => $post->getId()]) ?>">
+						<h6><?= $post->getTitle() ?></h6>
+						<p><?= $post->getShortContent() ?>...</p>
+					</a>
+				</div>
+			<?php endforeach; ?>
+	</div>
+	<form method="post" id="language">
+		<?= $this->formElement($localeForm->get('language')); ?>
+	</form>
+</div>

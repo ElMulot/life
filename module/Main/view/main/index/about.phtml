@@ -1,0 +1,128 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+$this->headTitle($this->translate('ABOUT'));
+echo $this->flashMessenger()->renderHtml();
+
+$localeForm->get('language')->setAttributes([
+		'class' => 'form-control selectpicker',
+		'onchange' => 'form.submit();',
+]);
+
+if ($this->Identity() == null) {
+	$contactForm->get('email')->setAttributes([
+			'class'=>'form-control',
+			'placeholder'=>'USER_MAIL'
+	]);
+}
+
+$contactForm->get('contact')->setAttributes([
+		'class'=>'form-control',
+		'rows'=>6,
+		'placeholder'=>'ABOUT_CONTACT_US_YOUR_MESSAGE'
+]);
+
+$contactForm->get('submit')->setAttributes([
+		'class'=>'btn btn-primary',
+]);
+?>
+<?php if ($contactFormError): ?>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#show_modal').click();
+	});
+</script>
+<?php endif; ?>
+<div class="row">
+	<div class="col-xs-6 col-sm-3 col-md-2"></div>
+	<div class="col-xs-6 col-sm-9 col-md-10">
+		<p><?= $this->translate('ABOUT_CONTACT_US_TEXT'); ?></p>
+		<button id="show_modal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#contact_us"><?= $this->translate('ABOUT_CONTACT_US'); ?></button>
+	</div>
+
+	<!-- Modal -->
+	<div class="modal fade" id="contact_us" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+      			<form method="post">
+	      			<div class="modal-header">
+	        			<button type="button" class="close" data-dismiss="modal" aria-label="<?= $this->translate('CANCEL'); ?>"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel"><?= $this->translate('ABOUT_CONTACT_US'); ?></h4>
+					</div>
+					<div class="modal-body">
+			        <div class="form-group">
+			            <?= $this->formLabel($contactForm->get('contact')); ?>
+			            <?= $this->formElement($contactForm->get('contact')); ?>
+			            <?= $this->formElementErrors($contactForm->get('contact')); ?>                  
+			        </div>
+			        <?php if ($this->Identity() == null): ?>
+				        <div class="form-group">
+				            <?= $this->formLabel($contactForm->get('email')); ?>
+				            <?= $this->formElement($contactForm->get('email')); ?>
+				            <?= $this->formElementErrors($contactForm->get('email')); ?>                  
+				        </div>
+				        <div class="form-group" style="width:350px;">
+					        <?= $this->formElement($contactForm->get('captcha')); ?>
+					        <p class="hint"><?= $this->translate('USER_CAPTCHA_TEXT')?></p>
+						</div>
+					<?php endif; ?>
+			        
+			        <?= $this->formElement($contactForm->get('csrf')); ?>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal"><?= $this->translate('CANCEL'); ?></button>
+						<?= $this->formElement($contactForm->get('submit')); ?>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- End Modal -->
+</div>
+<hr />
+<div class="row">
+	<div class="col-xs-6 col-sm-3 col-md-2"></div>
+	<div class="col-xs-6 col-sm-9 col-md-10"><a href="<?= $this->url('version') ?>">&nbsp;<?= $this->translate('ABOUT_VERSION') ?> 0.1 beta</p></div>
+</div>
+<hr />
+<div class="row">
+	<div class="col-xs-6 col-sm-3 col-md-2">
+		<a rel="zend framework" href="https://framework.zend.com/"><img alt="Zend Framework logo" style="max-width:150px;" src="https://framework.zend.com/images/logos/ZendFramework-logo.png" /></a>
+	</div>
+	<div class="col-xs-6 col-sm-9 col-md-10">
+		<p>
+			<?= $this->translate('ABOUT_ZEND_FRAMEWORK_CREDIT') ?>
+			<ul>
+				<li><a href="https://jquery.com/">jQuery</a></li>
+				<li><a href="http://getbootstrap.com/">Bootstrap</a></li>
+				<li><a href="https://silviomoreto.github.io/bootstrap-select/">Bootstrap Select</a></li>
+				<li><a href="http://www.chartjs.org/">Chart.js</a></li>
+				<li><a href="http://bootboxjs.com/">Bootbox</a></li>
+				<li><a href="http://github.hubspot.com/odometer/">Odometer</a></li>
+				<li><a href="https://www.tinymce.com/">Tinymce</a></li>
+				
+			</ul>
+		</p>
+	</div>
+</div>
+<div class="row">
+	<div class="col-xs-6 col-sm-3 col-md-2">
+		<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" /></a>
+	</div>
+	<div class="col-xs-6 col-sm-9 col-md-10">
+		<p><?= $this->translate('ABOUT_LICENSE') ?> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/"><?= $this->translate('ABOUT_LICENSE_LINK') ?></a>.</p>
+	</div>
+</div>
+<?php if (!$this->Identity()):?>
+<form method="post" style="position:absolute; right:10px; top:10px; z-index:2000;">
+	<?= $this->formElement($localeForm->get('language')); ?>
+</form>
+<?php endif; ?>

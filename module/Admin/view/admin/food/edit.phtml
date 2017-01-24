@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headTitle('EDIT');
+
+$form->get('language')->setAttributes([
+		'class'=>'form-control selectpicker',
+]);
+
+$form->get('food_name')->setAttributes([
+    'class'=>'form-control',
+	'placeholder'=>"Nom de l'aliment",
+    ]);
+
+$form->get('weight')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>"Poid approximatif",
+]);
+
+$form->get('comment')->setAttributes([
+		'class'=>'form-control',
+		'placeholder'=>"Commentaires",
+]);
+$form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
+$form->prepare();
+
+?>
+<div class="row">
+    <div class="col-md-6">
+        <?= $this->form()->openTag($form); ?>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('language')); ?>
+            <?= $this->formElement($form->get('language')); ?>
+            <?= $this->formElementErrors($form->get('language')); ?>                  
+        </div>
+        
+        <div class="form-group">
+            <?= $this->formLabel($form->get('food_name')); ?>
+            <?= $this->formElement($form->get('food_name')); ?>
+            <?= $this->formElementErrors($form->get('food_name')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('weight')); ?>
+            <?= $this->formElement($form->get('weight')); ?>
+            <?= $this->formElementErrors($form->get('weight')); ?>                  
+        </div>
+
+        <div class="form-group">
+            <?= $this->formLabel($form->get('comment')); ?>
+            <?= $this->formElement($form->get('comment')); ?>
+            <?= $this->formElementErrors($form->get('comment')); ?>                  
+        </div>
+        
+        <?= $this->formElement($form->get('submit')); ?>
+        
+        <?= $this->form()->closeTag(); ?>
+    </div>    
+</div> 

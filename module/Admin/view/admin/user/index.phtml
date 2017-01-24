@@ -1,0 +1,72 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headScript()->prependFile('/js/bootbox.min.js');
+$this->headTitle('Utilisateurs');
+?>
+<script type="text/javascript">
+	function confirm(link) {
+		bootbox.confirm({
+			title: "Confirmer la suppression ?",
+			message: "La suppression de l'utilisateur :<br /> " +
+				" - entrainera la suppression de tous les lignes 'Aliments jetés' relatif à cet utilisateur<br /> " +
+				" - entrainera la suppression de tous les posts et commentaires de cet utilisateur dans le blog",
+			buttons: {
+				cancel: {
+					label: '<i class="fa fa-times"></i> Annuler'
+				},
+				confirm: {
+					label: '<i class="fa fa-check"></i> Confirmer'
+				}
+			},
+			callback: function (result) {
+				if (result)
+					document.location.href=link;
+			}
+		});
+	}
+</script>
+
+<table class="table table-striped">
+
+   <tr>
+        <th>ID</th>
+        <th>E-mail</th>
+        <th>Nom</th>
+        <th>Langue</th>
+        <th>Status</th>
+        <th>Date Created</th>
+        <th style="width:220px">&nbsp;</th>        
+    </tr>
+    
+    <?php foreach ($users as $user): ?>
+    
+    <tr>
+        <td><?= $this->escapeHtml($user->getId()); ?></td>
+        <td><?= $this->escapeHtml($user->getEmail()); ?></td>
+        <td><?= $this->escapeHtml($user->getFullName()); ?></td>
+        <td><?= $this->escapeHtml($user->getLanguage()); ?></td>
+        <td><?= $this->escapeHtml($user->getStatusAsString()); ?></td>
+        <td><?= $this->escapeHtml($user->getDateCreated()); ?></td>        
+        <td>
+            <a class="btn btn-primary" href="<?= $this->url('admin/users', ['action'=>'edit', 'id'=>$user->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> <?= $this->translate('EDIT') ?>
+            </a>
+            <a class="btn btn-danger" href="javascript:confirm('<?= $this->url('admin/users', ['action'=>'delete', 'id'=>$user->getId()]); ?>');">
+                <span class="glyphicon glyphicon-remove" ></span> <?= $this->translate('DELETE') ?>
+            </a>
+        </td>    
+    </tr>
+        
+    <?php endforeach; ?>   
+    
+</table>
+

@@ -1,0 +1,68 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+ * @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+ * @author		Mulot
+ * @link		http://life.je.gfns.ru/
+ * @version		0.1 alpha
+ * @since		File available since 0.1 alpha
+ */
+
+$this->headScript()->prependFile('/js/bootbox.min.js');
+$this->headTitle('Liste des aliments enregistrés');
+?>
+<script type="text/javascript">
+	function confirm(link) {
+		bootbox.confirm({
+			title: "Confirmer la suppression ?",
+			message: "La suppression de l'aliment :<br /> " +
+				" - entrainera la suppression de tous les lignes 'Aliments jetés' relatif à cet aliment pour tous les utilisateurs<br /> " +
+				" - entrainera la suppression du tag relatif à cet aliment dans tous les posts",
+			buttons: {
+				cancel: {
+					label: '<i class="fa fa-times"></i> Annuler'
+				},
+				confirm: {
+					label: '<i class="fa fa-check"></i> Confirmer'
+				}
+			},
+			callback: function (result) {
+				if (result)
+					document.location.href=link;
+			}
+		});
+	}
+</script>
+<p>
+	<a class="btn btn-primary" href="<?= $this->url('admin/food', ['action' => 'add']) ?>">
+		<span class="glyphicon glyphicon-plus" ></span> <?= $this->translate('ADD') ?>
+	</a>
+</p>
+<table class="table">
+<tr>
+    <th>ID</th>
+    <th>Langue</th>
+    <th>Aliment</th>
+    <th>Poids approximatif</th>
+    <th>Commentaire</th>
+    <th width="220">&nbsp;</th>
+</tr>
+<?php foreach ($foods as $food) : ?>
+    <tr>
+        <td><?= $this->escapeHtml($food->getId()) ?></td>
+        <td><?= $this->escapeHtml($food->getLanguage()) ?></td>
+        <td><?= $this->escapeHtml($food->getFoodName()) ?></td>
+        <td><?= $this->escapeHtml($food->getWeight()) ?></td>
+        <td><?= $this->escapeHtml($food->getComment()) ?></td>
+        <td>
+            <a class="btn btn-primary" href="<?= $this->url('admin/food', ['action'=>'edit', 'id'=>$food->getId()]); ?>">
+                <span class="glyphicon glyphicon-pencil" ></span> <?= $this->translate('EDIT') ?>
+            </a>
+            <a class="btn btn-danger" href="javascript:confirm('<?= $this->url('admin/food', ['action'=>'delete', 'id'=>$food->getId()]); ?>');">
+                <span class="glyphicon glyphicon-remove" ></span> <?= $this->translate('DELETE') ?>
+            </a>
+        </td>
+    </tr>
+<?php endforeach; ?>
+</table>

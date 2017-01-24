@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @copyright	Copyright (c) 2015 - 2016
+* @license		https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode This work is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License.
+* @author		Mulot
+* @link		http://life.je.gfns.ru/
+* @version		0.1 alpha
+* @since		File available since 0.1 alpha
+*/
+
+use User\Entity\User;
+?>
+<?= $this->doctype() ?>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <?= $this->headTitle('No Waste Life')->setSeparator(' - ')->setAutoEscape(false) ?>
+
+        <?= $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge')
+        ?>
+
+        <!-- Styles -->
+        <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+	        ->prependStylesheet($this->basePath('bootstrap_select/css/bootstrap-select.min.css'))
+            ->prependStylesheet($this->basePath('css/style.css'))
+            ->prependStylesheet($this->basePath('css/bootstrap.min.css'))
+        ?>
+
+        <!-- Scripts -->
+        <?= $this->headScript()
+	        ->prependFile($this->basePath('bootstrap_select/js/bootstrap-select.min.js'))
+            ->prependFile($this->basePath('js/bootstrap.min.js'))
+            ->prependFile($this->basePath('js/jquery-3.1.0.min.js'))
+            
+            
+        ?>
+    <script type="text/javascript">
+	    $(document).ready(function() {
+			var maxHeight = 0;
+	    	$('.blog').each(function(){
+	    		maxHeight = Math.max($(this).height(), maxHeight);
+	    	});
+	    	$('.blog').each(function(){
+	    		$(this).height(maxHeight);
+	    	});
+	    	
+		});
+    </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container navbar-container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="<?= $this->url('index') ?>">
+                        <span id="title"><?= $this->translate('NAVBAR_TITLE'); ?></span><br/>
+                        <span id="catchword"><?= $this->translate('NAVBAR_CATCHWORD'); ?></span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse">
+					<?php
+					if ($this->Identity()) {
+						if ($this->Identity()->getStatus() == User::STATUS_ADMIN)
+							echo $this->navigation('Zend\Navigation\Admin')
+							->menu()
+							->setMinDepth(0)
+							->setMaxDepth(0)
+							->setUlClass('nav navbar-nav');
+						else
+						echo $this->navigation('Zend\Navigation\User')
+					        ->menu()
+					        ->setMinDepth(0)
+					        ->setMaxDepth(0)
+					        ->setUlClass('nav navbar-nav');
+					} else {
+						echo $this->navigation('Zend\Navigation\Main')
+							->menu()
+							->setMinDepth(0)
+							->setMaxDepth(0)
+							->setUlClass('nav navbar-nav');
+					}
+					?>
+                </div>
+            </div>
+        </nav>
+        <br/>
+        <div class="container">
+            <?= $this->content ?>
+        </div>
+        <div class="container">
+	        <hr>
+			<footer>
+				<p>&copy; 2016 - <?= date('Y') ?> - No Waste Life</p>
+			</footer>
+        </div>
+        <?= $this->inlineScript() ?>
+    </body>
+</html>
