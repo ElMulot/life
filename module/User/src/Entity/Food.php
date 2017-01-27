@@ -54,7 +54,7 @@ class Food
 	protected $comment;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="\Blog\Entity\Post", mappedBy="foods")
+	 * @ORM\ManyToMany(targetEntity="\Blog\Entity\Post")
 	 */
 	protected $posts;
 	

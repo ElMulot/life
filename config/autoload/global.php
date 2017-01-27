@@ -23,10 +23,7 @@ return [
 						'en_US' => 'English'
 				],
 				'default_language' => 'fr_FR', //overwrite value in translator/locale
-				'image_dir' => 'data/upload/',
-				'thumbnail_max_width' => 200,
-				'image_max_width' => 400,
-				'no_image_path' => 'data/img/no_image.jpg',
+				'image_dir' => 'data/image/',
 		],
 		
 		'session_config' => [

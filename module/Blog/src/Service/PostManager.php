@@ -78,6 +78,15 @@ class PostManager
 	 */
 	public function delete($post)
 	{
+		$tags = $post->getTags();
+		foreach ($tags as $tag) {
+			$post->removeTagAssociation($tag);
+			if (count($tag->getPosts()) == 0) //use to prevent orphan tags
+			{
+				$this->entityManager->remove($tag);
+			}
+		}
+		$this->entityManager->flush();
 		$this->entityManager->remove($post);
 		$this->entityManager->flush();
 	}
@@ -116,8 +125,13 @@ class PostManager
 		foreach ($tags as $tag)
 		{
 			$post->removeTagAssociation($tag);
+			if (count($tag->getPosts()) == 0) //use to prevent orphan tags
+			{
+				$this->entityManager->remove($tag);
+			}
 		}
-	
+		$this->entityManager->flush();
+		
 		// Add tags to post
 		$tags = explode(',', $tagsStr);
 		foreach ($tags as $tagName)
@@ -129,8 +143,7 @@ class PostManager
 				continue;
 			}
 				
-			$tag = $this->entityManager->getRepository(Tag::class)
-			->findOneByName($tagName);
+			$tag = $this->entityManager->getRepository(Tag::class)->findOneByName($tagName);
 			if ($tag == null)
 				$tag = new Tag();
 					

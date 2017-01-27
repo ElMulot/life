@@ -84,23 +84,14 @@ class Post
     protected $comments;
 	
     /**
-     * @ORM\ManyToMany(targetEntity="\User\Entity\Food", inversedBy="posts")
-     * @ORM\JoinTable(name="post_tag",
-     *      joinColumns={@ORM\JoinColumn(name="post_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="food_id", referencedColumnName="id")}
-     *      )
+     * @ORM\ManyToMany(targetEntity="\User\Entity\Food")
      * @OrderBy({"foodName" = "ASC"})
      */
     protected $foods;
     
-	/**
-	 * @ORM\ManyToMany(targetEntity="\Blog\Entity\Tag", inversedBy="posts")
-	 * @ORM\JoinTable(name="post_tag",
-	 *      joinColumns={@ORM\JoinColumn(name="post_id", referencedColumnName="id")},
-	 *      inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
-	 *      )
-	 * @OrderBy({"name" = "ASC"})
-	 */
+    /**
+     * @ORM\ManyToMany(targetEntity="\Blog\Entity\Tag", inversedBy="posts")
+     */
 	protected $tags;
 
 	public function __construct()
@@ -205,7 +196,9 @@ class Post
      */
     public function getShortContent()
     {
-    	$contentArray = explode('.', html_entity_decode($this->content));
+    	$content =preg_replace('#<[^\>]*\>#i', '', html_entity_decode($this->content));
+    	
+    	$contentArray = explode('.', $content);
     	$str = '';
     	foreach ($contentArray as $content) {
     		if (strlen($str) < 100)
@@ -291,7 +284,16 @@ class Post
      */
     public function addTag(Tag $tag) 
     {
-        $this->tags[] = $tag;        
+    	$this->tags[] = $tag;
+    }
+
+    /**
+     * @param Tag $tag
+     */
+    public function removeTagAssociation(Tag $tag)
+    {
+    	$this->tags->removeElement($tag);
+    	$tag->removePost($this);
     }
 }
 

@@ -305,8 +305,7 @@ class PostForm extends Form
 	                    [
 	                        'name'    => 'StringLength',
 	                        'options' => [
-	                            'min' => 1,
-	                            'max' => 4096
+	                            'min' => 1
 	                        ],
 	                    ],
 	                ],

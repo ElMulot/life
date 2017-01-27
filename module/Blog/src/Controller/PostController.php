@@ -215,16 +215,14 @@ class PostController extends AbstractActionController
 			$form = new PostForm($this->entityManager, $this->translator, $this->config, $step, $language);
 			
 			if ($this->getRequest()->isPost())
-			{
-				$data = array_merge_recursive(
-						$this->params()->fromPost(),
-						$this->getRequest()->getFiles()->toArray()
-						);
-				$form->setData($data);
-				
+			{				
+				$data = $this->params()->fromPost();
+				$form->setData($data);				
 				if ($form->isValid())
 				{
 					$data = $form->getData();
+					
+					$data['content'] = $this->imageManager->storeImages($data['content']);
 					$data['language'] = $this->sessionContainer->language;
 					$user = $this->entityManager->getRepository(User::class)->findOneById($this->Identity()->getId());
 					$this->postManager->add($data, $user);
@@ -259,15 +257,13 @@ class PostController extends AbstractActionController
 		
 		if ($this->getRequest()->isPost())
 		{
-			$data = array_merge_recursive(
-					$this->params()->fromPost(),
-					$this->getRequest()->getFiles()->toArray()
-					);
+			$data = $this->params()->fromPost();
 			$form = new PostForm($this->entityManager, $this->translator, $this->config, $data['language']);
 			$form->setData($data);
 			if ($form->isValid())
 			{
 				$data = $form->getData();
+				$data['content'] = $this->imageManager->storeImages($data['content']);
 				$this->postManager->update($data, $post);
 				return $this->redirect()->toRoute('posts', [
 						'action' => 'admin'
@@ -331,31 +327,21 @@ class PostController extends AbstractActionController
 		// Get the file name from GET variable
 		$fileName = $this->params()->fromQuery('name', '');
 		
-		// Check whether the user needs a thumbnail or a full-size image
-		$isThumbnail = (bool) $this->params()->fromQuery('thumbnail', false);
-		
 		// Validate input parameters
 		if (strlen($fileName) > 128)
 		{
 			throw new \Exception('File name is empty or too long');
 		} elseif (empty($fileName)) {
-			$fileName = $this->imageManager->getNoImagePath();
+			$this->getResponse()->setStatusCode(404);
+			return;
 		} else {
 			$fileName = $this->imageManager->getImagePath($fileName);
-		}
-		
-		if ($isThumbnail)
-		{
-			$fileName = $this->imageManager->getThumbnail($fileName);
-		} else {
-			$fileName = $this->imageManager->getImage($fileName);
 		}
 		
 		// Get image file info (size and MIME type).
 		$fileInfo = $this->imageManager->getImageFileInfo($fileName);
 		if ($fileInfo === false)
 		{
-			// Set 404 Not Found status code
 			$this->getResponse()->setStatusCode(404);
 			return;
 		}
@@ -377,11 +363,6 @@ class PostController extends AbstractActionController
 			// Set 500 Server Error status code
 			$this->getResponse()->setStatusCode(500);
 			return;
-		}
-		
-		if ($isThumbnail) {
-			// Remove temporary thumbnail image file.
-			unlink($fileName);
 		}
 		
 		// Return Response to avoid default view rendering.

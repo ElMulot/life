@@ -18,8 +18,28 @@ $this->headTitle('Editer un post');
 	tinymce.init({
 		selector:'textarea',
 		menubar:false,
-		toolbar:'undo redo | cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontsizeselect | bullist numlist | outdent indent | removeformat',
-		plugins : 'advlist autolink link image lists charmap print preview'
+		toolbar:'undo redo | cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontsizeselect | bullist numlist | outdent indent | removeformat | image',
+		plugins : 'advlist autolink link image lists charmap print preview image imagetools',
+		imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
+		image_caption: true,
+		image_advtab: true,
+		convert_urls: false,
+		file_picker_callback: function(callback, value, meta) {
+		      if (meta.filetype == 'image') {
+		        $('#upload').trigger('click');
+		        $('#upload').on('change', function() {
+		          var file = this.files[0];
+		          var reader = new FileReader();
+		          reader.onload = function(e) {
+		            callback(e.target.result, {
+		              alt: ''
+		            });
+		          };
+		          reader.readAsDataURL(file);
+		        });
+		      }
+		    },
+	    
 	});
 </script>
 <?php
@@ -109,7 +129,8 @@ $form->prepare();
         <div class="form-group">
             <?= $this->formLabel($form->get('content')); ?>
             <?= $this->formElement($form->get('content')); ?>
-            <?= $this->formElementErrors($form->get('content')); ?>                  
+            <?= $this->formElementErrors($form->get('content')); ?>
+			<input name="image" type="file" accept="image/jpeg, image/png" id="upload" class="hidden" onchange="">
         </div>
 
 	        <div class="form-group">

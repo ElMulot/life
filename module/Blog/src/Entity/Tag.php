@@ -38,11 +38,6 @@ class Tag
      * @ORM\Column(name="name") 
      */
     protected $name;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="\Blog\Entity\Post", mappedBy="tags")
-     */
-    protected $posts;
     
     public function __construct() 
     {        
@@ -94,7 +89,12 @@ class Tag
      */
     public function addPost(Post $post) 
     {
-        $this->posts[] = $post;        
-    }
+        $this->posts[] = $post;
+	}
+	
+	public function removePost(Post $post)
+	{
+		$this->posts->removeElement($post);
+	}
 }
 

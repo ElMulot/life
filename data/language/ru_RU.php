@@ -5,9 +5,9 @@ return array(
 	"ADD"									=> "Добавить",
 	"EDIT"									=> "Редактировать",
 	"UPDATE"								=> "Обновить",
-	"DELETE"								=> "Supprimer",
+	"DELETE"								=> "Удалить",
 	"SAVE"									=> "Сохранить",
-	"CONFIRM"								=> "Confirmer",	
+	"CONFIRM"								=> "Подтвердить",	
 	"CANCEL"								=> "Отменить",
 	"LANGUAGE"								=> "Язык",
 	"UNIT"									=> "Штука",
@@ -16,7 +16,7 @@ return array(
 
 	//Navbar
 	"NAVBAR_TITLE"							=> "Еда - не мусор.",
-	"NAVBAR_CATCHWORD"						=> "Воостанем против пищевых отходов!",
+	"NAVBAR_CATCHWORD"						=> "Скажем нет пищевым отходам!",
 		
 	//Menu
 	"HOME"									=> "Главная",
@@ -31,17 +31,17 @@ return array(
 	//Index
 	"INDEX_WELCOME_TITLE"					=> "Мы против пищевых отходов",
 	"INDEX_WELCOME_CONTENT"					=> "Более 80 000 тонн продуктов питания ежедневно выбрасывается в Европе, 35 000 тонн - в России. Каждый из нас может изменить эти цифры своими действиями. Цель этого сайта: изменить наши потребительские привычки и уменьшить отходы.",	
-	"INDEX_WELCOME_WASTES_SAVED"			=> "grammes de nourriture sauvé grâce à nos membres.",
+	"INDEX_WELCOME_WASTES_SAVED"			=> "граммов продуктов были сохранены благодаря нашим участников.",
 	"INDEX_BLOG_LAST_POSTS"					=> "Последние статьи в блоге",
 	"INDEX_BLOG_COMPLETE_POST"				=> "Читать дальше",	
 
 	//About
-	"ABOUT_CONTACT_US"						=> "Contactez-nous !",
-	"ABOUT_CONTACT_US_TEXT"					=> "Une question ? Une suggestion ? Envie de nous aider à préserver notre planète ou tout simplement nous passer un petit bonjour ;)",
-	"ABOUT_CONTACT_US_YOUR_MESSAGE"			=> "Votre message",
-	"ABOUT_CONTACT_US_SUCCESS"				=> "Votre message vient d'être envoyé.",
-	"ABOUT_VERSION"							=> "Version :",
-	"ABOUT_ZEND_FRAMEWORK_CREDIT"			=> "Ce site a été développé sous Zend Framework 3, et avec les librairies :",
+	"ABOUT_CONTACT_US"						=> "Свяжитесь с нами!",
+	"ABOUT_CONTACT_US_TEXT"					=> "У вас к нам вопрос? Предложение? Желаете помочь в спасении планеты или просто сказать привет? ;)",
+	"ABOUT_CONTACT_US_YOUR_MESSAGE"			=> "Ваше сообщение",
+	"ABOUT_CONTACT_US_SUCCESS"				=> "Ваше сообщение отправлено.",
+	"ABOUT_VERSION"							=> "Версия:",
+	"ABOUT_ZEND_FRAMEWORK_CREDIT"			=> "Этот сайт был разработан с момощью Zend Framework 3, и его библиотек :",
 	"ABOUT_LICENSE"							=> "Это произведение доступно по",
 	"ABOUT_LICENSE_LINK"					=> "лицензии Creative Commons «Attribution» («Атрибуция») 4.0 Всемирная",	
 		
@@ -58,12 +58,12 @@ return array(
 	"WASTE_QUANTITY"						=> "Количество",
 	"WASTE_WHY"								=> "Причина",
 	"WASTE_BLOG_LINK"						=> "Читайте об этом в нашем блоге:",
-	"WASTE_CONFIRM_DELETE_TITLE"			=> "Confirmation",
-	"WASTE_CONFIRM_DELETE_CONTENT"			=> "Voulez-vous vraiment supprimer cette ligne ? Cette action ne peut être annulée.",
+	"WASTE_CONFIRM_DELETE_TITLE"			=> "Подтвердите, пожалуйста",
+	"WASTE_CONFIRM_DELETE_CONTENT"			=> "Вы действительно хотите удалить эту строку?",
 
 	//Blog
 	"BLOG_PUBLISHED_ON"						=> "Опубликовано",
-	"BLOG_ON"								=> " le ",
+	"BLOG_ON"								=> " ",
 	"BLOG_PUBLISHED_BY"						=> "Автор:",
 	"BLOG_TAGS"								=> "Метки",
 	"BLOG_TAGS_CLOUD"						=> "Популярные метки",

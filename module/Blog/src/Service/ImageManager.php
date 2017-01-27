@@ -29,51 +29,38 @@ class ImageManager
     	$this->config = $config;
     }
     
+    /**
+     * @return string Path to save directory (configured in application_settings/image_dir)
+     */
     public function getSaveToDir()
     {
     	return $this->config['application_settings']['image_dir'];
     }
 
-    public function getImageMaxWidth()
+    /**
+     * @return string Unique jpg image name
+     */
+    public function getImageName()
     {
-    	return $this->config['application_settings']['image_max_width'];
+    	return uniqid('img') .'.jpg';
     }
     
-    public function getThumbnailMaxWidth()
+    /**
+     * @param string $imageName
+     * @return string Concatenated directory name and image name
+     */
+    public function getImagePath($imageName) 
     {
-    	return $this->config['application_settings']['thumbnail_max_width'];
+    	return $this->getSaveToDir() . $imageName;
     }
 
-    /**
-     * Returns the path to the saved image file
-     * @param string $fileName Image file name (without path part)
-     * @return string Path to image file
-     */
-    public function getImagePath($fileName) 
-    {
-        // Take some precautions to make file name secure
-        str_replace("/", "", $fileName);  // Remove slashes
-        str_replace("\\", "", $fileName); // Remove back-slashes
-                
-        // Return concatenated directory name and file name.
-        return $this->getSaveToDir() . $fileName;
-    }
+	/**
+	 * Retrieves the file information (size, MIME type) by image path
+	 * @param string $filePath Path to the image file
+	 * @return array File information
+	 */
     
-    /**
-     * Returns the path to no_image.jpg
-     * @return string Path to image file
-     */
-    public function getNoImagePath()
-    {
-    	return $this->config['application_settings']['no_image_path'];
-    }
-    
-    /**
-     * Retrieves the file information (size, MIME type) by image path
-     * @param string $filePath Path to the image file
-     * @return array File information
-     */
-    public function getImageFileInfo($filePath) 
+	public function getImageFileInfo($filePath) 
     {
         // Try to open file        
         if (!is_readable($filePath)) {            
@@ -96,6 +83,52 @@ class ImageManager
     }
     
     /**
+     * Get images properties and convert it into image file through image manager
+     * @param string $content
+     * @return string
+     */
+    public function storeImages($content)
+    {
+    	//while (preg_match('#src="data:image/(jpeg|png);base64,([^"]*)"\salt="([^"]*)"\swidth="([^"]*)"\sheight="([^"]*)#i', $content, $array))
+    	while (preg_match('#src="data:image/(jpeg|png|gif);base64,[^\>]*#i', $content, $array))
+    	{
+    		$imgTag = $array[0];
+    		preg_match('#src="data:image/(jpeg|png|gif);base64,([^"]*)#i', $imgTag, $array);
+    		$blob = $array[2];
+    		preg_match('#alt="([^"]*)#i', $imgTag, $array);
+    		$alt = $array[1];
+    		preg_match('#width="([^"]*)#i', $imgTag, $array);
+    		$width = $array[1];
+    		preg_match('#height="([^"]*)#i', $imgTag, $array);
+    		$height = $array[1];
+    		 
+    		$imageName = $this->getImageName();
+    		$this->setImageFileContent($imageName, $blob, $width, $height);
+    		$content = str_replace($imgTag, 'src="/posts/file?name=' . $imageName . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"', $content);
+    	}
+    	return $content;
+    }
+    
+    /**
+     * Save the image file content to a file image
+     * @param string $imageName
+     * @param string $blob
+     * @param int $desiredWidth
+     * @param int $desiredHeight
+     * @return bool
+     */
+    public function setImageFileContent($imageName, $blob, $desiredWidth, $desiredHeight)
+    {
+    	$originalImage = imagecreatefromstring(base64_decode($blob));
+    	$originalWidth = imagesx($originalImage);
+    	$originalHeight = imagesy($originalImage);
+    	
+    	$resultingImage = imagecreatetruecolor($desiredWidth, $desiredHeight);
+    	imagecopyresampled($resultingImage, $originalImage, 0, 0, 0, 0, $desiredWidth, $desiredHeight, $originalWidth, $originalHeight);
+    	return imagejpeg($resultingImage, $this->getImagePath($imageName));
+    }
+    
+    /**
      * Returns the image file content. On error, returns boolean false
      * @param string $filePath Path to image file
      * @return string|false
@@ -103,55 +136,6 @@ class ImageManager
     public function getImageFileContent($filePath) 
     {
         return file_get_contents($filePath);
-    }
-
-    /**
-     * Returns the resized image
-     * @param string $filePath Path to image file
-     * @return string Resulting file name
-     */ 
-    public function getImage($filePath) {
-    	return $this->resizeImage($filePath, $this->getImageMaxWidth());
-    }
-    
-    /**
-     * Returns the resized image as thumbnail
-     * @param string $filePath Path to image file
-     * @return string Resulting file name
-     */
-    public function getThumbnail($filePath) {
-    	return $this->resizeImage($filePath, $this->getThumbnailMaxWidth());
-    }
-    
-
-    /**
-     * Resizes the image, keeping its aspect ratio
-     * @param string $filePath Path to image file
-     * @param int $desiredWidth Desired width
-     * @return string Resulting file name
-     */
-    public  function resizeImage($filePath, $desiredWidth) 
-    {
-        // Get original image dimensions.
-        list($originalWidth, $originalHeight) = getimagesize($filePath);
-
-        // Calculate aspect ratio
-        $aspectRatio = $originalWidth/$originalHeight;
-        // Calculate the resulting height
-        $desiredHeight = $desiredWidth/$aspectRatio;
-
-        // Resize the image
-        $resultingImage = imagecreatetruecolor($desiredWidth, $desiredHeight);
-        $originalImage = imagecreatefromjpeg($filePath);
-        imagecopyresampled($resultingImage, $originalImage, 0, 0, 0, 0, 
-        		$desiredWidth, $desiredHeight, $originalWidth, $originalHeight);
-
-        // Save the resized image to temporary location
-        $tmpFileName = tempnam("/tmp", "img");
-        imagejpeg($resultingImage, $tmpFileName, 80);
-        
-        // Return the path to resulting image.
-        return $tmpFileName;
     }
 }
 

@@ -54,7 +54,7 @@ $this->headTitle('Liste des aliments enregistrés');
         <td><?= $this->escapeHtml($food->getLanguage()) ?></td>
         <td><?= $this->escapeHtml($food->getFoodName()) ?></td>
         <td><?= $this->escapeHtml($food->getWeight()) ?></td>
-        <td><?= $this->escapeHtml($food->getComment()) ?></td>
+        <td><?= $food->getComment() ?></td>
         <td>
             <a class="btn btn-primary" href="<?= $this->url('admin/food', ['action'=>'edit', 'id'=>$food->getId()]); ?>">
                 <span class="glyphicon glyphicon-pencil" ></span> <?= $this->translate('EDIT') ?>
