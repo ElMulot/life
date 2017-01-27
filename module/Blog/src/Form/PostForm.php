@@ -125,36 +125,6 @@ class PostForm extends Form
 	        ]);
 	        
 	        $this->add([
-	        		'type'  => 'file',
-	        		'name' => 'image',
-	        		'options' => [
-	        				'label' => 'Importer une nouvelle image',
-	        		],
-	        		'attributes' => [
-	        				'id' => 'image',
-	        		],
-	        ]);
-	        
-	        $this->add([
-	        		'type'  => 'button',
-	        		'name' => 'cancel_image',
-	        		'options' => [
-	        				'label' => 'Supprimer l\'image',
-	        		],
-	        		'attributes' => [
-	        				'onclick' => "$('#thumbnail').hide(); $('#no_image').show(); $('#has_already_image').val(0); $('#image').val('');"
-	        		]
-	        ]);
-	        
-	        $this->add([
-	        		'type'  => 'hidden',
-	        		'name' => 'has_already_image',
-	        		'attributes' => [
-	        				'id' => 'has_already_image',
-	        		],
-	        ]);
-	        
-	        $this->add([
 	            'type'  => 'textarea',
 	            'name' => 'content',
 	            'options' => [
@@ -262,42 +232,7 @@ class PostForm extends Form
 							]
 					]
 			]);
-			
-			$inputFilter->add([
-					'type' => FileInput::class,
-					'name' => 'image',
-					'required' => false,
-					'validators' => [
-							[
-									'name' => 'FileUploadFile'
-							],
-							[
-									'name' => 'FileIsImage'
-							],
-							[
-									'name' => 'FileImageSize',
-									'options' => [
-											'minWidth' => 128,
-											'minHeight' => 128,
-											'maxWidth' => 4096,
-											'maxHeight' => 4096
-									]
-							]
-					],
-					'filters' => [
-							[
-									'name' => 'FileRenameUpload',
-									'options' => [
-											'target'=>'./' . $this->config['application_settings']['image_dir'],
-											'useUploadName' => false,
-											'useUploadExtension' => false,
-											'overwrite' => true,
-	        								'randomize'=>true
-	        						]
-	        				]
-	        		],
-	        ]);
-	        
+			       
 	        $inputFilter->add([
 	                'name'     => 'content',
 	                'required' => true,
@@ -320,26 +255,6 @@ class PostForm extends Form
 	        				['name' => 'StripNewlines'],
 	        		],
 	        ]);
-	        
-	        /*
-	        $inputFilter->add([
-	        		'name' => 'foods',
-	        		'required' => false,
-	        		'filters' => [
-	        				['name' => 'StringTrim'],
-	        		],
-	        		'validators' => [
-	        				[
-	        				'name' => 'InArray',
-	        				'options' =>
-	        				[
-	        						'haystack' => array_keys($this->foods),
-	        						'recursive' => true,
-	        				]
-	        				]
-	        		],
-	        ]);
-	        */
 	        
 	        $inputFilter->add([
 	                'name'     => 'tags',

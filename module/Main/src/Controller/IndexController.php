@@ -42,6 +42,8 @@ class IndexController extends AbstractActionController
 
 	private $config;
 	
+	private $versions;
+	
 	public function __construct($entityManager, $authManager, $userManager, $sessionContainer, $translator, $config)
 	{
 		$this->entityManager = $entityManager;
@@ -50,8 +52,27 @@ class IndexController extends AbstractActionController
 		$this->sessionContainer = $sessionContainer;
 		$this->translator = $translator;
 		$this->config = $config;
+		
+		$this->versions = [
+				[
+						'version' => '0.1.1 beta',
+						'date' => '27-01-2017',
+						'fixed' => [
+								'Modify admin blog interface',
+								'Correct some bugs in database managment',
+								'Changes on version page',
+						]
+				],
+				[
+				'version' => '0.1.0 beta',
+				'date' => '24-01-2017',
+				'fixed' => [
+						'First beta release',
+				]
+				]
+		];
 	}
-	
+
 	public function indexAction()
 	{
 	
@@ -161,17 +182,21 @@ class IndexController extends AbstractActionController
 				$contactFormError = false;
 			}
 		}
-
+		
+		$version = $this->versions[0]['version'];
+		
 		return new ViewModel([
 				'localeForm' => $localeForm,
 				'contactForm' => $contactForm,
 				'contactFormError' => $contactFormError,
+				'version' => $version,
 		]);
 	}
 	
 	public function versionAction()
 	{
 		return new ViewModel([
+			'versions' => $this->versions,
 		]);
 	}
 }

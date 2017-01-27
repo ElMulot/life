@@ -54,7 +54,7 @@ class Food
 	protected $comment;
 
 	/**
-	 * @ORM\ManyToMany(targetEntity="\Blog\Entity\Post")
+	 * @ORM\ManyToMany(targetEntity="\Blog\Entity\Post", mappedBy="foods")
 	 */
 	protected $posts;
 	
@@ -162,5 +162,13 @@ class Food
 	public function addPost(Post $post)
 	{
 		$this->posts[] = $post;
+	}
+	
+	/**
+	 * @param Post $post
+	 */
+	public function removePost(Post $post)
+	{
+		$this->posts->removeElement($post);
 	}
 }

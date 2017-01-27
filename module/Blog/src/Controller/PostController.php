@@ -276,8 +276,6 @@ class PostController extends AbstractActionController
 			$data = [
 					'language' => $post->getLanguage(),
 					'title' => $post->getTitle(),
-					'cancel_image' => $post->getImage(),
-					'have_already_image' => true,
 					'content' => $post->getContent(),
 					'tags' => $this->postManager->convertTagsToString($post, false),
 					'status' => $post->getStatus()

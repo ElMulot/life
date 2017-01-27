@@ -56,11 +56,6 @@ class Post
      */
     protected $title;
     
-    /**
-     * @ORM\Column(name="image")
-     */
-    protected $image;
-    
     /** 
      * @ORM\Column(name="content")  
      */
@@ -84,7 +79,7 @@ class Post
     protected $comments;
 	
     /**
-     * @ORM\ManyToMany(targetEntity="\User\Entity\Food")
+     * @ORM\ManyToMany(targetEntity="\User\Entity\Food", inversedBy="posts")
      * @OrderBy({"foodName" = "ASC"})
      */
     protected $foods;
@@ -166,23 +161,6 @@ class Post
         $this->title = $title;
     }
     
-    /**
-     * @return string
-     */
-    public function getImage()
-    {
-    	return $this->image;
-    }
-    
-    /**
-     * @param string $image
-     */
-    public function setImage($image)
-    {
-    	if (is_array($image))
-			$this->image = basename($image['tmp_name']);
-    }
-
     /**
      * @return string
      */
@@ -272,6 +250,15 @@ class Post
     }
     
     /**
+     * @param Food $food
+     */
+    public function removeFood(Food $food)
+    {
+    	$this->foods->removeElement($food);
+    	$food->removePost($this);
+    }
+    
+    /**
      * @return Tag[]
      */
     public function getTags() 
@@ -290,7 +277,7 @@ class Post
     /**
      * @param Tag $tag
      */
-    public function removeTagAssociation(Tag $tag)
+    public function removeTag(Tag $tag)
     {
     	$this->tags->removeElement($tag);
     	$tag->removePost($this);

@@ -53,7 +53,6 @@ if ($step == 1):
 			toolbar:'undo redo | cut copy paste | bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect fontsizeselect | bullist numlist | outdent indent | removeformat | image',
 			plugins : 'advlist autolink link image lists charmap print preview image imagetools',
 			imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
-			image_caption: true,
 			image_advtab: true,
 			file_picker_callback: function(callback, value, meta) {
 			      if (meta.filetype == 'image') {
@@ -82,10 +81,6 @@ if ($step == 1):
 	$form->get('title')->setAttributes([
 			'class'=>'form-control',
 			'placeholder'=>'Titre du post'
-	]);
-		
-	$form->get('cancel_image')->setAttributes([
-			'class' => 'btn btn-primary'
 	]);
 	
 	$form->get('content')->setAttributes([
@@ -128,23 +123,6 @@ if ($step == 1):
 	            <?= $this->formLabel($form->get('title')); ?>
 	            <?= $this->formElement($form->get('title')); ?>
 	            <?= $this->formElementErrors($form->get('title')); ?>                  
-	        </div>
-	        
-	        <div class="form-group" style="border-radius:4px; border:1px solid #ccc; padding: 6px 12px;">
-	        	<label for="title">Image</label>
-		        <div class="row">
-		        <div class="col-md-5">
-			        <img id="no_image" src="<?= $this->url('posts', ['action'=>'file'], ['query'=>['name'=>'', 'thumbnail'=>true]]); ?>" class="img-thumbnail">
-			        <img id="thumbnail" src="" class="img-thumbnail" style="display:none;">
-			    </div>
-			    <div class="col-md-7">
-		            <?= $this->formLabel($form->get('image')); ?>
-		            <?= $this->formElement($form->get('image')); ?>
-		            <?= $this->formElementErrors($form->get('image')); ?>
-		            <br />
-		           	<?= $this->formElement($form->get('cancel_image')); ?>
-		        </div>
-		        </div>
 	        </div>
 	        
 	        <div class="form-group">

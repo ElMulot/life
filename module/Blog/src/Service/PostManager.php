@@ -13,9 +13,9 @@ namespace Blog\Service;
 
 use Blog\Entity\Post;
 use Blog\Entity\Comment;
+use User\Entity\Food;
 use Blog\Entity\Tag;
 use Zend\Filter\StaticFilter;
-use User\Entity\Food;
 
 /**
  * @package		Blog\Service
@@ -48,7 +48,6 @@ class PostManager
 		$post->setUser($user);
 		$post->setLanguage($data['language']);
 		$post->setTitle($data['title']);
-		$post->setImage($data['image']);
 		$post->setContent($data['content']);
 		$post->setStatus($data['status']);
 		$this->addFoodsToPost($data['foods'], $post);
@@ -64,8 +63,6 @@ class PostManager
 	public function update($data, $post)
 	{
 		$post->setTitle($data['title']);
-		if (!$data['has_already_image'] || $data['image'])
-			$post->setImage($data['image']);
 		$post->setContent($data['content']);
 		$post->setStatus($data['status']);	
 		$this->addFoodsToPost($data['foods'], $post);
@@ -78,13 +75,15 @@ class PostManager
 	 */
 	public function delete($post)
 	{
-		$tags = $post->getTags();
-		foreach ($tags as $tag) {
-			$post->removeTagAssociation($tag);
+		foreach ($post->getTags() as $tag) {
+			$post->removeTag($tag);
 			if (count($tag->getPosts()) == 0) //use to prevent orphan tags
 			{
 				$this->entityManager->remove($tag);
 			}
+		}
+		foreach ($post->getFoods() as $food) {
+			$post->removeFood($food);
 		}
 		$this->entityManager->flush();
 		$this->entityManager->remove($post);
@@ -101,7 +100,7 @@ class PostManager
 		$foods = $post->getFoods();
 		foreach ($foods as $food)
 		{
-			$post->removeFoodAssociation($food);
+			$post->removeFood($food);
 		}
 		
 		// Add foods to post
@@ -124,7 +123,7 @@ class PostManager
 		$tags = $post->getTags();
 		foreach ($tags as $tag)
 		{
-			$post->removeTagAssociation($tag);
+			$post->removeTag($tag);
 			if (count($tag->getPosts()) == 0) //use to prevent orphan tags
 			{
 				$this->entityManager->remove($tag);
@@ -148,7 +147,7 @@ class PostManager
 				$tag = new Tag();
 					
 				$tag->setName($tagName);
-				$tag->addPost($post);
+				//$tag->addPost($post);
 					
 				$this->entityManager->persist($tag);
 					

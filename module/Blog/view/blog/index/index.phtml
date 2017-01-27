@@ -52,18 +52,9 @@ echo $this->flashMessenger()->renderHtml();
 	    </p>
 	
 	    <div class="row">    
-	        <?php if ($post->getImage()): ?>
-		        <div class="col-xs-7">
-		        	<img src="<?= $this->url('posts', ['action'=>'file'], ['query'=>['name'=>$post->getImage()]]); ?>" class="img-rounded img-responsive">
-		        </div>
-		        <div class="col-xs-5">
-		        	<?= $post->getContent(); ?>
-		        </div>
-			<?php else: ?>
-				<div class="col-xs-12">
-					<?= $post->getContent(); ?>
-				</div>
-			<?php endif; ?>
+			<div class="col-xs-12">
+				<?= $post->getContent(); ?>
+			</div>
 		</div>
     
     <?php endforeach; ?>

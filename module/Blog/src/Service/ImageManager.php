@@ -95,16 +95,14 @@ class ImageManager
     		$imgTag = $array[0];
     		preg_match('#src="data:image/(jpeg|png|gif);base64,([^"]*)#i', $imgTag, $array);
     		$blob = $array[2];
-    		preg_match('#alt="([^"]*)#i', $imgTag, $array);
-    		$alt = $array[1];
     		preg_match('#width="([^"]*)#i', $imgTag, $array);
-    		$width = $array[1];
+    		$width = (isset($array[1]))?$array[1]:'';
     		preg_match('#height="([^"]*)#i', $imgTag, $array);
-    		$height = $array[1];
+    		$height = (isset($array[1]))?$array[1]:'';
     		 
     		$imageName = $this->getImageName();
     		$this->setImageFileContent($imageName, $blob, $width, $height);
-    		$content = str_replace($imgTag, 'src="/posts/file?name=' . $imageName . '" alt="' . $alt . '" width="' . $width . '" height="' . $height . '"', $content);
+    		$content = str_replace($imgTag, 'src="/posts/file?name=' . $imageName . '" width="' . $width . '" height="' . $height . '" /', $content);
     	}
     	return $content;
     }
