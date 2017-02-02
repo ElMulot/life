@@ -56,6 +56,7 @@ class IndexController extends AbstractActionController
 								'If weight=0 for a food, the option \'Unit\' for wastes is not aviable',
 								'Add a search field for food in waste form',
 								'Calculate weight when adding/editing a waste with \'Unit\' selected',
+								'Now, you can add video link on the blog',
 								'Bugs fix'
 						]
 				],
