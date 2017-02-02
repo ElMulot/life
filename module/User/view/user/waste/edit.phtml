@@ -31,6 +31,37 @@ $form->get('submit')->setAttributes(['class'=>'btn btn-primary']);
 $form->prepare();
 
 ?>
+<script type="text/javascript">
+	var foods = [];
+	<?php foreach ($foods as $food): ?>
+		foods[<?= $food->getId()?>] =  <?= $food->getWeight(); ?>;
+	<?php endforeach; ?>
+
+	function calculateWeight() {
+		if ($("select[name=UOM]").val() == 'Unit' && $.isNumeric($("input[name=quantity]").val()) && $("input[name=quantity]").val() != 0) {
+			$("#weight").text("Soit " + foods[$("select[name=food]").val()] * $("input[name=quantity]").val() + " g");
+		} else {
+			$("#weight").text("");
+		}
+	}
+
+	$(document).ready(function() {
+		$("select[name=food]").change(function() {
+			if (foods[$(this).val()] == 0) {
+				$("select[name=UOM]").find('[value=Unit]').prop('disabled', true);
+				$("select[name=UOM]").val('kg');
+			} else {
+				$("select[name=UOM]").find('[value=Unit]').prop('disabled', false);
+			}
+			$("select[name=UOM]").selectpicker('refresh');
+			calculateWeight();
+		});
+		$("select[name=food]").change();
+		
+		$("input[name=quantity]").change(calculateWeight);
+		$("select[name=UOM]").change(calculateWeight);
+	});
+</script>
 <div class="row">
     <div class="col-md-6">
         <?= $this->form()->openTag($form); ?>
@@ -59,6 +90,8 @@ $form->prepare();
 					<?= $this->formElementErrors($form->get('UOM')); ?>
 				</div>
         	</div>
+        	<br />
+        	<p id="weight"></p>
         </div>
         
         <div class="form-group">

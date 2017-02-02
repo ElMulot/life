@@ -44,15 +44,26 @@ class FoodController extends AbstractActionController
 
 	public function indexAction()
 	{
-		$foods = $this->entityManager->getRepository(Food::class)->findBy([], ['language' => 'ASC', 'foodName' => 'ASC']);
+		$language = (string) $this->params()->fromQuery('lang', '');
+		if (in_array($language, array_keys($this->config['application_settings']['aviable_languages'])) == false) {
+			$language = $this->Identity()->getLanguage();
+		}
+		
+		$foods = $this->entityManager->getRepository(Food::class)->findBy(['language' => $language], ['weight' => 'ASC']);
 		return new ViewModel([
-				'foods' => $foods
+				'foods' => $foods,
+				'language' => $language,
+				'aviableLanguages' => $this->config['application_settings']['aviable_languages'],
 		]);
 	}
 
 	public function addAction()
 	{
-		$form = new FoodForm($this->entityManager, $this->translator, $this->config);
+		$language = (string) $this->params()->fromQuery('lang', '');
+		if (in_array($language, array_keys($this->config['application_settings']['aviable_languages'])) == false) {
+			$language = $this->Identity()->getLanguage();
+		}
+		$form = new FoodForm($this->entityManager, $this->translator, $this->config, $language);
 		
 		if ($this->getRequest()->isPost())
 		{
@@ -65,7 +76,7 @@ class FoodController extends AbstractActionController
 			{
 				$data = $form->getData();
 				$this->foodManager->add($data);
-				return $this->redirect()->toRoute('admin/food');
+				return $this->redirect()->toRoute('admin/food', ['action' => 'index'], ['query'=>['lang' => $data['language']]]);
 			}
 		}
 
@@ -76,7 +87,12 @@ class FoodController extends AbstractActionController
 	
 	public function editAction()
 	{
-		$form = new FoodForm($this->entityManager, $this->translator, $this->config);
+		$language = (string) $this->params()->fromQuery('lang', '');
+		if (in_array($language, array_keys($this->config['application_settings']['aviable_languages'])) == false) {
+			$language = $this->Identity()->getLanguage();
+		}
+		
+		$form = new FoodForm($this->entityManager, $this->translator, $this->config, $language);
 		$foodId = (int)$this->params()->fromRoute('id', -1);
 		
 		if ($foodId<0) {
@@ -98,7 +114,7 @@ class FoodController extends AbstractActionController
 		
 				$data = $form->getData();
 				$this->foodManager->update($data, $food);
-				return $this->redirect()->toRoute('admin/food');
+				return $this->redirect()->toRoute('admin/food', ['action' => 'index'], ['query'=>['lang' => $data['language']]]);
 			}
 		} else {
 			$data = [
@@ -133,6 +149,6 @@ class FoodController extends AbstractActionController
 		}
 	
 		$this->foodManager->delete($food);
-		return $this->redirect()->toRoute('admin/food');
+		return $this->redirect()->toRoute('admin/food', ['action' => 'index'], ['query'=>['lang' => $food->getLanguage()]]);
 	}
 }

@@ -15,6 +15,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use User\Entity\Waste;
 use User\Form\WasteForm;
+use User\Entity\Food;
 
 /**
  * @package		User\Controller
@@ -48,6 +49,7 @@ class WasteController extends AbstractActionController
 	public function addAction()
 	{
 		$form = new WasteForm($this->entityManager, $this->Identity());
+		$foods = $this->entityManager->getRepository(Food::class)->findBy(['language' => $this->Identity()->getLanguage()]);
 		
 		if ($this->getRequest()->isPost())
 		{
@@ -64,13 +66,16 @@ class WasteController extends AbstractActionController
 		}
 
 		return new ViewModel([
-				'form' => $form
+				'form' => $form,
+				'foods' => $foods
 		]);
 	}
 	
 	public function editAction()
 	{
 		$form = new WasteForm($this->entityManager, $this->Identity());
+		$foods = $this->entityManager->getRepository(Food::class)->findBy(['language' => $this->Identity()->getLanguage()]);
+		
 		$wasteId = (int)$this->params()->fromRoute('id', -1);
 	
 		if ($wasteId<0) {
@@ -109,7 +114,8 @@ class WasteController extends AbstractActionController
 	
 		return new ViewModel([
 				'form' => $form,
-				'waste' => $waste
+				'waste' => $waste,
+				'foods' => $foods
 		]);
 	}
 	

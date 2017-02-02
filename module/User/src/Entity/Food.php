@@ -12,6 +12,7 @@
 namespace User\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 use Blog\Entity\Post;
 
 /**

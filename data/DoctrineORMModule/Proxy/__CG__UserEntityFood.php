@@ -309,4 +309,15 @@ class Food extends \User\Entity\Food implements \Doctrine\ORM\Proxy\Proxy
         return parent::addPost($post);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function removePost(\Blog\Entity\Post $post)
+    {
+
+        $this->__initializer__ && $this->__initializer__->__invoke($this, 'removePost', [$post]);
+
+        return parent::removePost($post);
+    }
+
 }

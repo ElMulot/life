@@ -31,13 +31,16 @@ class FoodForm extends Form
 	
 	private $config;
 	
-	public function __construct($entityManager, $translator, $config)
+	private $language;
+	
+	public function __construct($entityManager, $translator, $config, $language)
 	{
 		parent::__construct('food-form');
 		$this->setAttribute('method', 'post');
 		$this->entityManager = $entityManager;
 		$this->translator = $translator;
 		$this->config = $config;
+		$this->language = $language;
 		$this->addElements();
 		$this->addInputFilter();
 	}
@@ -52,7 +55,7 @@ class FoodForm extends Form
 						'value_options' => $this->config['application_settings']['aviable_languages']
 				],
 				'attributes' => [
-						'value' => $this->translator->getLocale()
+						'value' => $this->language
 				]
 		]);
 

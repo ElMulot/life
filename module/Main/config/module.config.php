@@ -67,7 +67,8 @@ return [
 								[
 										'actions' => [
 												'index',
-												'about'
+												'about',
+												'version'
 										],
 										'allow' => '*'
 								]

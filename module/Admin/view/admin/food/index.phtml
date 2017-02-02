@@ -35,10 +35,15 @@ $this->headTitle('Liste des aliments enregistrés');
 	}
 </script>
 <p>
-	<a class="btn btn-primary" href="<?= $this->url('admin/food', ['action' => 'add']) ?>">
+	<a class="btn btn-primary" href="<?= $this->url('admin/food', ['action' => 'add'], ['query'=>['lang' => $language]]) ?>">
 		<span class="glyphicon glyphicon-plus" ></span> <?= $this->translate('ADD') ?>
 	</a>
 </p>
+<ul class="nav nav-pills">
+	<?php foreach ($aviableLanguages as $key => $aviableLanguage): ?>
+		<li role="presentation" <?= ($key == $language)?'class="active"':'' ?>><a href="<?= $this->url('admin/food', ['action' => 'index'], ['query'=>['lang' => $key]]) ?>"><?= $aviableLanguage ?></a></li>
+	<?php endforeach; ?>
+</ul>
 <table class="table">
 <tr>
     <th>ID</th>

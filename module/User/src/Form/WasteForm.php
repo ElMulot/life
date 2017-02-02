@@ -55,7 +55,8 @@ class WasteForm extends Form
 						'value_options' => $array,
 				],
 				'attributes' => [
-						'value' => 0
+						'value' => 0,
+						'data-live-search' => true
 				]
 		]);
 
